@@ -17,6 +17,8 @@ DESTDIR ?=
 DATA_PREFIX ?= /usr/share
 LIB_PREFIX ?= /usr/lib
 
+# Python binary which should be used to run tests.
+PYTHON ?= $(shell which python)
 
 openvswitch-persistence: service
 
@@ -55,3 +57,16 @@ uninstall:
 .PHONY: clean
 clean:
 	git clean -d -x --force
+
+.PHONY: pep8
+pep8:
+	$(PYTHON) -m pep8 src/*.py tests/*.py
+	@echo 'PEP8 test passed.'
+
+.PHONY: pyflakes
+pyflakes:
+	$(PYTHON) -m pyflakes src/*.py tests/*.py
+	@echo 'Pyflakes test passed.'
+
+.PHONY: check
+check: pep8 pyflakes
