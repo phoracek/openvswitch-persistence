@@ -1,0 +1,14 @@
+[Unit]
+Description=Apply Open vSwitch persistence configuration.
+Before=openvswitch.service
+After=openvswitch-nonetwork.service
+RefuseManualStart=true
+RefuseManualStop=true
+
+[Service]
+Type=oneshot
+ExecStart=/usr/share/openvswitch-persistence/apply.py
+ExecStart=/usr/share/openvswitch-persistence/apply.py
+
+[Install]
+WantedBy=openvswitch.service
