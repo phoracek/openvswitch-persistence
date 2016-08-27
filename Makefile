@@ -70,3 +70,7 @@ pyflakes:
 
 .PHONY: check
 check: pep8 pyflakes
+
+.PHONY: test
+test:
+	$(PYTHON) -m pytest tests/*.py
