@@ -4,6 +4,14 @@ Extension for Open vSwitch allowing users to mark Bridge/Port as
 non-persistent. Such device will be removed on openvswitch.service restart.
 
 
+## Instalation
+
+```
+make install
+systemctl enable
+```
+
+
 ## Usage
 
 ```

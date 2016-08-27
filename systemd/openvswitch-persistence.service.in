@@ -7,8 +7,8 @@ RefuseManualStop=true
 
 [Service]
 Type=oneshot
-ExecStart=/usr/share/openvswitch-persistence/apply.py
-ExecStart=/usr/share/openvswitch-persistence/apply.py
+ExecStart=@DESTDIR@@DATA_PREFIX@/openvswitch-persistence/apply.py
+ExecStop=@DESTDIR@@DATA_PREFIX@/openvswitch-persistence/apply.py
 
 [Install]
 WantedBy=openvswitch.service
