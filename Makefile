@@ -20,6 +20,9 @@ LIB_PREFIX ?= /usr/lib
 # Python binary which should be used to run tests.
 PYTHON ?= $(shell which python)
 
+# Whether test container should be removed after successful test or not.
+REMOVE_CONTAINER_AFTER_SUCCESS ?= 1
+
 openvswitch-persistence: service
 
 .PHONY: service
@@ -74,3 +77,24 @@ check: pep8 pyflakes
 .PHONY: test
 test:
 	$(PYTHON) -m pytest tests/*.py
+
+.PHONY: docker-image
+docker-image:
+	docker build --tag fedora/openvswitch-persistence tests
+
+.PHONY: test-in-container
+test-in-container: docker-image
+	$(eval \
+		cid := $(shell \
+			docker run --tty --detach --cap-add NET_ADMIN \
+			--volume /sys/fs/cgroup:/sys/fs/cgroup \
+			fedora/openvswitch-persistence))
+	docker cp . $(cid):/root/openvswitch-persistence
+	docker exec $(cid) make check
+	docker exec $(cid) make install
+	docker exec $(cid) systemctl enable openvswitch-persistence
+	docker exec $(cid) make test
+ifeq ($(REMOVE_CONTAINER_AFTER_SUCCESS), 1)
+	@echo 'Removing container.'
+	docker rm --force $(cid)
+endif
